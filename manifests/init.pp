@@ -16,7 +16,8 @@ class etherpad_lite (
   $base_log_dir     = '/var/log',
   $base_install_dir = '/opt/etherpad-lite',
   $nodejs_version   = 'v0.10.21',
-  $eplite_version   = 'develop'
+  $eplite_version   = 'develop',
+  $ep_ensure        = 'present',
 ) {
 
   # where the modules are, needed to easily install modules later
@@ -85,7 +86,7 @@ class etherpad_lite (
   }
 
   vcsrepo { "${base_install_dir}/etherpad-lite":
-    ensure   => present,
+    ensure   => $ep_ensure,
     provider => git,
     source   => 'https://github.com/ether/etherpad-lite.git',
     owner    => $ep_user,
