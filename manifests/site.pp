@@ -39,15 +39,6 @@ class etherpad_lite::site (
     require => Class['etherpad_lite'],
   }
 
-  file { "${base}/etherpad-lite/src/static/robots.txt":
-    ensure  => present,
-    source  => 'puppet:///modules/etherpad_lite/robots.txt',
-    owner   => $etherpad_lite::ep_user,
-    group   => $etherpad_lite::ep_user,
-    mode    => '0644',
-    require => Class['etherpad_lite'],
-  }
-
   include logrotate
   logrotate::file { 'epliteerror':
     log     => "${base}/${etherpad_lite::ep_user}/error.log",
