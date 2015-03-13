@@ -47,6 +47,10 @@
       RewriteCond %{HTTP_HOST} !<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>
       RewriteRule ^.*$ https://<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %> [L,R=301]
 
+      # Server robots.txt directly so that it does not affect
+      # etherpad-lite installation.
+      RewriteRule ^/robots.txt$ <%= scope.lookupvar("etherpad_lite::apache::docroot") %>/robots.txt [L]
+
       RewriteCond %{REQUEST_URI} !^/p/
       RewriteCond %{REQUEST_URI} !^/locales/
       RewriteCond %{REQUEST_URI} !^/locales.json
