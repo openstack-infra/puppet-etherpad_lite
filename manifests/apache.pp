@@ -2,6 +2,7 @@
 #
 class etherpad_lite::apache (
   $vhost_name = $::fqdn,
+  $docroot = '/srv/etherpad-lite',
   $serveradmin = "webmaster@${::fqdn}",
   $ssl_cert_file = '',
   $ssl_key_file = '',
@@ -18,7 +19,7 @@ class etherpad_lite::apache (
   include apache
   apache::vhost { $vhost_name:
     port     => 443,
-    docroot  => 'MEANINGLESS ARGUMENT',
+    docroot  => $docroot,
     priority => '50',
     template => 'etherpad_lite/etherpadlite.vhost.erb',
     ssl      => true,
@@ -57,6 +58,19 @@ class etherpad_lite::apache (
       notify  => Service['httpd'],
       require => File['/etc/apache2/conf-available/connection-tuning'],
     }
+  }
+
+  file { $docroot:
+    ensure => directory,
+  }
+
+  file { "${docroot}/robots.txt":
+    ensure  => present,
+    source  => 'puppet:///modules/etherpad_lite/robots.txt',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0444',
+    require => File[$docroot],
   }
 
   file { '/etc/ssl/certs':
