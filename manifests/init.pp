@@ -118,6 +118,13 @@ class etherpad_lite (
     owner   => 'root',
   }
 
+  $pad_js_path="${base_install_dir}/etherpad-lite/src/static/js/pad.js"
+  exec { 'set_monospace_font_by_default':
+    require => Vcsrepo["${base_install_dir}/etherpad-lite"],
+    creates => "${pad_js_path}.orig",
+    command => "/bin/cp -f ${pad_js_path} ${pad_js_path}.orig && /bin/sed -ri '/useMonospaceFontGlobal:/ s/false/true/'
+  }
+
   file { '/etc/init.d/etherpad-lite':
     ensure => link,
     target => '/lib/init/upstart-job',
