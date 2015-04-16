@@ -70,6 +70,14 @@
       RewriteCond %{REQUEST_URI} !/robots.txt
       RewriteRule ^/+(.+)$ https://<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>/p/$1 [NC,L,R=301]
 
+      <IfModule mod_proxy_wstunnel.c>
+          RewriteCond %{REQUEST_URI}  ^/socket.io            [NC]
+          RewriteCond %{QUERY_STRING} transport=websocket    [NC]
+          RewriteRule /(.*)           ws://localhost:9001/$1 [P,L]
+          ProxyPass        /socket.io http://localhost:9001
+          ProxyPassReverse /socket.io http://localhost:9001
+      </IfModule>
+
       RewriteRule ^/(.*)$ http://localhost:9001/$1 [P]
       ProxyPassReverse / http://localhost:9001/
   </IfModule>
