@@ -16,21 +16,21 @@ class etherpad_lite::apache (
     ensure => present,
   }
 
-  include apache
-  apache::vhost { $vhost_name:
+  include httpd
+  httpd::vhost { $vhost_name:
     port     => 443,
     docroot  => $docroot,
     priority => '50',
     template => 'etherpad_lite/etherpadlite.vhost.erb',
     ssl      => true,
   }
-  a2mod { 'rewrite':
+  httpd_mod { 'rewrite':
     ensure => present,
   }
-  a2mod { 'proxy':
+  httpd_mod { 'proxy':
     ensure => present,
   }
-  a2mod { 'proxy_http':
+  httpd_mod { 'proxy_http':
     ensure => present,
   }
 
@@ -91,7 +91,7 @@ class etherpad_lite::apache (
       group   => 'root',
       mode    => '0640',
       content => $ssl_cert_file_contents,
-      before  => Apache::Vhost[$vhost_name],
+      before  => Httpd::Vhost[$vhost_name],
     }
   }
 
@@ -102,7 +102,7 @@ class etherpad_lite::apache (
       mode    => '0640',
       content => $ssl_key_file_contents,
       require => Package['ssl-cert'],
-      before  => Apache::Vhost[$vhost_name],
+      before  => Httpd::Vhost[$vhost_name],
     }
   }
 
@@ -112,7 +112,7 @@ class etherpad_lite::apache (
       group   => 'root',
       mode    => '0640',
       content => $ssl_chain_file_contents,
-      before  => Apache::Vhost[$vhost_name],
+      before  => Httpd::Vhost[$vhost_name],
     }
   }
 }
