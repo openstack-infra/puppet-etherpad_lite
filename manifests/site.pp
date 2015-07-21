@@ -3,14 +3,14 @@
 class etherpad_lite::site (
   $database_password,
   $etherpad_title,
-  $sessionKey    = '',
-  $dbType        = 'mysql',
+  $sessionkey    = undef,
+  $dbtype        = 'mysql',
   $database_user = 'eplite',
   $database_name = 'etherpad-lite',
   $database_host = 'localhost'
 ) {
 
-  include etherpad_lite
+  include ::etherpad_lite
 
   $base = $etherpad_lite::base_install_dir
 
@@ -39,7 +39,7 @@ class etherpad_lite::site (
     require => Class['etherpad_lite'],
   }
 
-  include logrotate
+  include ::logrotate
   logrotate::file { 'epliteerror':
     log     => "${base}/${etherpad_lite::ep_user}/error.log",
     options => [
