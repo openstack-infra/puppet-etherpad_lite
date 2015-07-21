@@ -4,19 +4,19 @@ class etherpad_lite::apache (
   $vhost_name = $::fqdn,
   $docroot = '/srv/etherpad-lite',
   $serveradmin = "webmaster@${::fqdn}",
-  $ssl_cert_file = '',
-  $ssl_key_file = '',
-  $ssl_chain_file = '',
-  $ssl_cert_file_contents = '', # If left empty puppet will not create file.
-  $ssl_key_file_contents = '', # If left empty puppet will not create file.
-  $ssl_chain_file_contents = '' # If left empty puppet will not create file.
+  $ssl_cert_file = undef,
+  $ssl_key_file = undef,
+  $ssl_chain_file = undef,
+  $ssl_cert_file_contents = undef, # If left empty puppet will not create file.
+  $ssl_key_file_contents = undef, # If left empty puppet will not create file.
+  $ssl_chain_file_contents = undef # If left empty puppet will not create file.
 ) {
 
   package { 'ssl-cert':
     ensure => present,
   }
 
-  include httpd
+  include ::httpd
   httpd::vhost { $vhost_name:
     port     => 443,
     docroot  => $docroot,
@@ -85,7 +85,7 @@ class etherpad_lite::apache (
     mode   => '0700',
   }
 
-  if $ssl_cert_file_contents != '' {
+  if $ssl_cert_file_contents != undef {
     file { $ssl_cert_file:
       owner   => 'root',
       group   => 'root',
@@ -95,7 +95,7 @@ class etherpad_lite::apache (
     }
   }
 
-  if $ssl_key_file_contents != '' {
+  if $ssl_key_file_contents != undef {
     file { $ssl_key_file:
       owner   => 'root',
       group   => 'ssl-cert',
@@ -106,7 +106,7 @@ class etherpad_lite::apache (
     }
   }
 
-  if $ssl_chain_file_contents != '' {
+  if $ssl_chain_file_contents != undef {
     file { $ssl_chain_file:
       owner   => 'root',
       group   => 'root',

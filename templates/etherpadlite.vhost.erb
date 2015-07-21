@@ -28,7 +28,7 @@
 
   SSLCertificateFile      <%= scope.lookupvar("etherpad_lite::apache::ssl_cert_file") %>
   SSLCertificateKeyFile   <%= scope.lookupvar("etherpad_lite::apache::ssl_key_file") %>
-  <% if scope.lookupvar("etherpad_lite::apache::ssl_chain_file") != "" %>
+  <% if scope.lookupvar("etherpad_lite::apache::ssl_chain_file") != nil %>
     SSLCertificateChainFile <%= scope.lookupvar("etherpad_lite::apache::ssl_chain_file") %>
   <% end %>
 
