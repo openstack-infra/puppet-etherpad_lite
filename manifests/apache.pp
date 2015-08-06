@@ -16,8 +16,8 @@ class etherpad_lite::apache (
     ensure => present,
   }
 
-  include httpd
-  httpd::vhost { $vhost_name:
+  include ::httpd
+  ::httpd::vhost { $vhost_name:
     port     => 443,
     docroot  => $docroot,
     priority => '50',
