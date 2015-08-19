@@ -74,11 +74,11 @@
           RewriteCond %{REQUEST_URI}  ^/socket.io            [NC]
           RewriteCond %{QUERY_STRING} transport=websocket    [NC]
           RewriteRule /(.*)           ws://localhost:9001/$1 [P,L]
-          ProxyPass        /socket.io http://localhost:9001
+          ProxyPass        /socket.io http://localhost:9001 retry=0
           ProxyPassReverse /socket.io http://localhost:9001
       </IfModule>
 
-      RewriteRule ^/(.*)$ http://localhost:9001/$1 [P]
+      ProxyPass  / http://localhost:9001/ retry=0
       ProxyPassReverse / http://localhost:9001/
   </IfModule>
 
