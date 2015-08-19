@@ -15,6 +15,7 @@ class etherpad_lite (
   $ep_user          = 'eplite',
   $base_log_dir     = '/var/log',
   $base_install_dir = '/opt/etherpad-lite',
+  # If set to system will install system package.
   $nodejs_version   = 'v0.10.21',
   $eplite_version   = 'develop',
   $ep_ensure        = 'present',
@@ -44,46 +45,67 @@ class etherpad_lite (
     mode   => '0664',
   }
 
-  vcsrepo { "${base_install_dir}/nodejs":
-    ensure   => present,
-    provider => git,
-    source   => 'https://github.com/joyent/node.git',
-    revision => $nodejs_version,
-    require  => [
-        Package['git'],
-        File[$base_install_dir],
-    ],
+  if ($nodejs_version != 'system') {
+    vcsrepo { "${base_install_dir}/nodejs":
+      ensure   => present,
+      provider => git,
+      source   => 'https://github.com/joyent/node.git',
+      revision => $nodejs_version,
+      require  => [
+          Package['git'],
+          File[$base_install_dir],
+      ],
+    }
+
+    package { [
+        'gzip',
+        'curl',
+        'python',
+        'libssl-dev',
+        'pkg-config',
+        'abiword',
+        'build-essential',
+      ]:
+      ensure => present,
+    }
+
+    package { ['nodejs', 'npm']:
+      ensure => purged,
+    }
+
+    file { '/usr/local/bin/node':
+      ensure => absent,
+    }
+
+    buildsource { "${base_install_dir}/nodejs":
+      timeout => 900, # 15 minutes
+      creates => '/usr/local/bin/node',
+      require => [
+        Package['gzip'],
+        Package['curl'],
+        Package['python'],
+        Package['libssl-dev'],
+        Package['pkg-config'],
+        Package['build-essential'],
+        Vcsrepo["${base_install_dir}/nodejs"],
+      ],
+      before  => Anchor['nodejs-anchor'],
+    }
+  } else {
+    package { ['nodejs', 'npm']:
+      ensure => present,
+      before => Anchor['nodejs-anchor'],
+    }
+
+    file { '/usr/local/bin/node':
+      ensure  => link,
+      target  => '/usr/bin/nodejs',
+      before  => Anchor['nodejs-anchor'],
+      require => Package['nodejs'],
+    }
   }
 
-  package { [
-      'gzip',
-      'curl',
-      'python',
-      'libssl-dev',
-      'pkg-config',
-      'abiword',
-      'build-essential',
-    ]:
-    ensure => present,
-  }
-
-  package { ['nodejs', 'npm']:
-    ensure => purged,
-  }
-
-  buildsource { "${base_install_dir}/nodejs":
-    timeout => 900, # 15 minutes
-    creates => '/usr/local/bin/node',
-    require => [
-      Package['gzip'],
-      Package['curl'],
-      Package['python'],
-      Package['libssl-dev'],
-      Package['pkg-config'],
-      Package['build-essential'],
-      Vcsrepo["${base_install_dir}/nodejs"],
-    ],
-  }
+  anchor { 'nodejs-anchor': }
 
   vcsrepo { "${base_install_dir}/etherpad-lite":
     ensure   => $ep_ensure,
@@ -105,7 +127,7 @@ class etherpad_lite (
     environment => "HOME=${base_log_dir}/${ep_user}",
     require     => [
       Vcsrepo["${base_install_dir}/etherpad-lite"],
-      Buildsource["${base_install_dir}/nodejs"],
+      Anchor['nodejs-anchor'],
     ],
     before      => File["${base_install_dir}/etherpad-lite/settings.json"],
     creates     => "${base_install_dir}/etherpad-lite/node_modules",
