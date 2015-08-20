@@ -26,37 +26,72 @@ class etherpad_lite::apache (
   }
   httpd_mod { 'rewrite':
     ensure => present,
+    before => Httpd::Vhost[$vhost_name],
   }
   httpd_mod { 'proxy':
     ensure => present,
+    before => Httpd::Vhost[$vhost_name],
   }
   httpd_mod { 'proxy_http':
     ensure => present,
+    before => Httpd::Vhost[$vhost_name],
   }
 
+  file { '/etc/apache2':
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
   if ($::lsbdistcodename == 'precise') {
+    file { '/etc/apache2/conf.d':
+      ensure  => directory,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      require => File['/etc/apache2'],
+    }
     file { '/etc/apache2/conf.d/connection-tuning':
-      ensure => present,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
-      source => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
-      notify => Service['httpd'],
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
+      notify  => Service['httpd'],
+      require => File['/etc/apache2/conf.d'],
     }
   } else {
+    file { '/etc/apache2/conf-available':
+      ensure  => directory,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      require => File['/etc/apache2'],
+    }
     file { '/etc/apache2/conf-available/connection-tuning':
-      ensure => present,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
-      source => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
+      require => File['/etc/apache2/conf-available'],
     }
 
+    file { '/etc/apache2/conf-enabled':
+      ensure  => directory,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      require => File['/etc/apache2'],
+    }
     file { '/etc/apache2/conf-enabled/connection-tuning':
       ensure  => link,
       target  => '/etc/apache2/conf-available/connection-tuning',
       notify  => Service['httpd'],
-      require => File['/etc/apache2/conf-available/connection-tuning'],
+      require => [
+        File['/etc/apache2/conf-enabled'],
+        File['/etc/apache2/conf-available/connection-tuning'],
+      ],
     }
   }
 
