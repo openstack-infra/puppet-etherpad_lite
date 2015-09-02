@@ -58,6 +58,10 @@ class etherpad_lite::apache (
       notify  => Service['httpd'],
       require => File['/etc/apache2/conf-available/connection-tuning'],
     }
+
+    httpd_mod { 'proxy_wstunnel':
+      ensure => present,
+    }
   }
 
   file { $docroot:
