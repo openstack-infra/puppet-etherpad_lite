@@ -80,6 +80,7 @@
 
       ProxyPass  / http://localhost:9001/ retry=0
       ProxyPassReverse / http://localhost:9001/
+      Setenv proxy-initial-not-pooled
   </IfModule>
 
 </VirtualHost>
