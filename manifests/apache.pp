@@ -1,5 +1,8 @@
 # == Class: etherpad_lite::apache
 #
+# For websockets, set $etherpad_lite::apache::wstunnel to true.
+#
+#
 class etherpad_lite::apache (
   $vhost_name = $::fqdn,
   $docroot = '/srv/etherpad-lite',
@@ -9,7 +12,8 @@ class etherpad_lite::apache (
   $ssl_chain_file = '',
   $ssl_cert_file_contents = '', # If left empty puppet will not create file.
   $ssl_key_file_contents = '', # If left empty puppet will not create file.
-  $ssl_chain_file_contents = '' # If left empty puppet will not create file.
+  $ssl_chain_file_contents = '', # If left empty puppet will not create file.
+  $wstunnel = false
 ) {
 
   package { 'ssl-cert':
@@ -59,8 +63,14 @@ class etherpad_lite::apache (
       require => File['/etc/apache2/conf-available/connection-tuning'],
     }
 
-    httpd_mod { 'proxy_wstunnel':
-      ensure => present,
+    if ($wstunnel == true) {
+      httpd_mod { 'proxy_wstunnel':
+        ensure => present,
+      }
+    } else {
+      httpd_mod { 'proxy_wstunnel':
+        ensure => absent,
+      }
     }
   }
 
