@@ -27,3 +27,13 @@
     MaxClients         2048
     MaxRequestsPerChild   0
 </IfModule>
+<IfModule mpm_worker_event>
+    ServerLimit          64
+    StartServers          3
+    MinSpareThreads      96
+    MaxSpareThreads     192
+    ThreadLimit          64
+    ThreadsPerChild      32
+    MaxClients         2048
+    MaxRequestsPerChild   0
+</IfModule>
