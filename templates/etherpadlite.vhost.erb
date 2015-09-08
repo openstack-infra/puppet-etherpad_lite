@@ -44,6 +44,13 @@
       # supporting "nice" urls as etherpad hardcodes /p/ in many places.
       # Adapted from https://github.com/ether/etherpad-lite/wiki/How-to-put-Etherpad-Lite-behind-a-reverse-Proxy
       RewriteEngine on
+
+      # Do not rewrite the /server-status URL (though by default, this
+      # is only accessible from localhost).  Connect to it with:
+      # ssh -L 8443:localhost:443 $HOSTNAME
+      # https://localhost:8443/server-status
+      RewriteRule ^/server-status$ /server-status [L]
+
       RewriteCond %{HTTP_HOST} !<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>
       RewriteRule ^.*$ https://<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %> [L,R=301]
 
