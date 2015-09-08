@@ -44,7 +44,7 @@ class etherpad_lite::apache (
       notify => Service['httpd'],
     }
   } else {
-    file { '/etc/apache2/conf-available/connection-tuning':
+    file { '/etc/apache2/conf-available/connection-tuning.conf':
       ensure => present,
       owner  => 'root',
       group  => 'root',
@@ -52,7 +52,7 @@ class etherpad_lite::apache (
       source => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
     }
 
-    file { '/etc/apache2/conf-enabled/connection-tuning':
+    file { '/etc/apache2/conf-enabled/connection-tuning.conf':
       ensure  => link,
       target  => '/etc/apache2/conf-available/connection-tuning',
       notify  => Service['httpd'],
