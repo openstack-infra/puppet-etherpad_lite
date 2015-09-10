@@ -27,7 +27,7 @@
     MaxClients         2048
     MaxRequestsPerChild   0
 </IfModule>
-<IfModule mpm_worker_event>
+<IfModule mpm_event_module>
     ServerLimit          64
     StartServers          3
     MinSpareThreads      96
