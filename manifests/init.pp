@@ -45,6 +45,10 @@ class etherpad_lite (
     mode   => '0664',
   }
 
+  package { 'abiword':
+    ensure => present,
+  }
+
   if ($nodejs_version != 'system') {
     vcsrepo { "${base_install_dir}/nodejs":
       ensure   => present,
@@ -63,7 +67,6 @@ class etherpad_lite (
         'python',
         'libssl-dev',
         'pkg-config',
-        'abiword',
         'build-essential',
       ]:
       ensure => present,
