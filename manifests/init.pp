@@ -45,6 +45,18 @@ class etherpad_lite (
     mode   => '0664',
   }
 
+  package { [
+      'gzip',
+      'curl',
+      'python',
+      'libssl-dev',
+      'pkg-config',
+      'abiword',
+      'build-essential',
+    ]:
+    ensure => present,
+  }
+
   if ($nodejs_version != 'system') {
     vcsrepo { "${base_install_dir}/nodejs":
       ensure   => present,
@@ -55,18 +67,6 @@ class etherpad_lite (
           Package['git'],
           File[$base_install_dir],
       ],
-    }
-
-    package { [
-        'gzip',
-        'curl',
-        'python',
-        'libssl-dev',
-        'pkg-config',
-        'abiword',
-        'build-essential',
-      ]:
-      ensure => present,
     }
 
     package { ['nodejs', 'npm']:
