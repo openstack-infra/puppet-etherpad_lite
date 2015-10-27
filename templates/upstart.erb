@@ -18,6 +18,7 @@ pre-start script
     bin/installDeps.sh >> $EPLOGS/error.log || { stop; exit 1; }
 end script
 
+limit nofile 8192 16384
 script
   cd $EPHOME
   exec su -s /bin/sh -c 'exec "$0" "$@"' $EPUSER -- /usr/local/bin/node --stack_size=1968 node_modules/ep_etherpad-lite/node/server.js \
