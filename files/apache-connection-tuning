@@ -18,22 +18,22 @@
 # spare threads around to better handle thundering herds of users (eg at the
 # start of summit sessions).
 <IfModule mpm_worker_module>
-    ServerLimit          64
+    ServerLimit         128
     StartServers          3
     MinSpareThreads      96
     MaxSpareThreads     192
     ThreadLimit          64
     ThreadsPerChild      32
-    MaxClients         2048
+    MaxClients         4096
     MaxRequestsPerChild   0
 </IfModule>
 <IfModule mpm_event_module>
-    ServerLimit          64
+    ServerLimit         128
     StartServers          3
     MinSpareThreads      96
     MaxSpareThreads     192
     ThreadLimit          64
     ThreadsPerChild      32
-    MaxClients         2048
+    MaxClients         4096
     MaxRequestsPerChild   0
 </IfModule>
