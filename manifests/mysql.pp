@@ -21,7 +21,7 @@ class etherpad_lite::mysql(
     password => $database_password,
     host     => 'localhost',
     grant    => ['all'],
-    charset  => 'utf8',
+    charset  => 'utf8mb4',
     require  => [
       Class['mysql::server'],
       Class['mysql::server::account_security'],
