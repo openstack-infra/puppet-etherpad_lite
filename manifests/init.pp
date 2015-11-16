@@ -55,10 +55,7 @@ class etherpad_lite (
       provider => git,
       source   => 'https://github.com/joyent/node.git',
       revision => $nodejs_version,
-      require  => [
-          Package['git'],
-          File[$base_install_dir],
-      ],
+      require  => File[$base_install_dir],
     }
 
     package { [
@@ -112,10 +109,7 @@ class etherpad_lite (
     source   => 'https://github.com/ether/etherpad-lite.git',
     owner    => $ep_user,
     revision => $eplite_version,
-    require  => [
-        Package['git'],
-        User[$ep_user],
-    ],
+    require  => User[$ep_user],
   }
 
   exec { 'install_etherpad_dependencies':
@@ -140,8 +134,9 @@ class etherpad_lite (
   }
 
   file { '/etc/init.d/etherpad-lite':
-    ensure => link,
-    target => '/lib/init/upstart-job',
+    ensure  => link,
+    target  => '/lib/init/upstart-job',
+    require => Exec['install_etherpad_dependencies']
   }
 
   file { "${base_log_dir}/${ep_user}":

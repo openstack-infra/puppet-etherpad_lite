@@ -1,35 +1,35 @@
 <VirtualHost *:80>
-  ServerName <%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>
-  ServerAdmin <%= scope.lookupvar("etherpad_lite::apache::serveradmin") %>
+  ServerName <%= @vhost_name %>
+  ServerAdmin <%= @serveradmin %>
 
-  ErrorLog ${APACHE_LOG_DIR}/<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>-error.log
+  ErrorLog ${APACHE_LOG_DIR}/<%= @vhost_name %>-error.log
 
   LogLevel warn
 
-  CustomLog ${APACHE_LOG_DIR}/<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>-access.log combined
+  CustomLog ${APACHE_LOG_DIR}/<%= @vhost_name %>-access.log combined
 
-  Redirect / https://<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>/
+  Redirect / https://<%= @vhost_name %>/
 
 </VirtualHost>
 
 <IfModule mod_ssl.c>
 <VirtualHost *:443>
-  ServerName <%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>
-  ServerAdmin <%= scope.lookupvar("etherpad_lite::apache::serveradmin") %>
+  ServerName <%= @vhost_name %>
+  ServerAdmin <%= @serveradmin %>
 
-  ErrorLog ${APACHE_LOG_DIR}/<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>-ssl-error.log
+  ErrorLog ${APACHE_LOG_DIR}/<%= @vhost_name %>-ssl-error.log
 
   LogLevel warn
 
-  CustomLog ${APACHE_LOG_DIR}/<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>-ssl-access.log combined
+  CustomLog ${APACHE_LOG_DIR}/<%= @vhost_name %>-ssl-access.log combined
 
   SSLEngine on
   SSLProtocol All -SSLv2 -SSLv3
 
-  SSLCertificateFile      <%= scope.lookupvar("etherpad_lite::apache::ssl_cert_file") %>
-  SSLCertificateKeyFile   <%= scope.lookupvar("etherpad_lite::apache::ssl_key_file") %>
-  <% if scope.lookupvar("etherpad_lite::apache::ssl_chain_file") != "" %>
-    SSLCertificateChainFile <%= scope.lookupvar("etherpad_lite::apache::ssl_chain_file") %>
+  SSLCertificateFile      <%= @ssl_cert_file %>
+  SSLCertificateKeyFile   <%= @ssl_key_file %>
+  <% if @ssl_chain_file  %>
+    SSLCertificateChainFile <%= @ssl_chain_file %>
   <% end %>
 
   BrowserMatch "MSIE [2-6]" \
@@ -51,12 +51,12 @@
       # https://localhost:8443/server-status
       RewriteRule ^/server-status$ /server-status [L]
 
-      RewriteCond %{HTTP_HOST} !<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>
-      RewriteRule ^.*$ https://<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %> [L,R=301]
+      RewriteCond %{HTTP_HOST} !<%= @vhost_name %>
+      RewriteRule ^.*$ https://<%= @vhost_name %> [L,R=301]
 
       # Server robots.txt directly so that it does not affect
       # etherpad-lite installation.
-      RewriteRule ^/robots.txt$ <%= scope.lookupvar("etherpad_lite::apache::docroot") %>/robots.txt [L]
+      RewriteRule ^/robots.txt$ <%= @docroot %>/robots.txt [L]
 
       RewriteCond %{REQUEST_URI} !^/p/
       RewriteCond %{REQUEST_URI} !^/locales/
@@ -75,7 +75,7 @@
       RewriteCond %{REQUEST_URI} !^/jserror
       RewriteCond %{REQUEST_URI} !/favicon.ico
       RewriteCond %{REQUEST_URI} !/robots.txt
-      RewriteRule ^/+(.+)$ https://<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>/p/$1 [NC,L,R=301]
+      RewriteRule ^/+(.+)$ https://<%= @vhost_name %>/p/$1 [NC,L,R=301]
 
       <IfModule mod_proxy_wstunnel.c>
           RewriteCond %{REQUEST_URI}  ^/socket.io            [NC]

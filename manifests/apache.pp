@@ -4,12 +4,12 @@ class etherpad_lite::apache (
   $vhost_name = $::fqdn,
   $docroot = '/srv/etherpad-lite',
   $serveradmin = "webmaster@${::fqdn}",
-  $ssl_cert_file = '',
-  $ssl_key_file = '',
-  $ssl_chain_file = '',
-  $ssl_cert_file_contents = '', # If left empty puppet will not create file.
-  $ssl_key_file_contents = '', # If left empty puppet will not create file.
-  $ssl_chain_file_contents = '' # If left empty puppet will not create file.
+  $ssl_cert_file = undef,
+  $ssl_key_file = undef,
+  $ssl_chain_file = undef,
+  $ssl_cert_file_contents = undef, # If left undef puppet will not create file.
+  $ssl_key_file_contents = undef, # If left undef puppet will not create file.
+  $ssl_chain_file_contents = undef, # If left undef puppet will not create file.
 ) {
 
   package { 'ssl-cert':
@@ -17,21 +17,27 @@ class etherpad_lite::apache (
   }
 
   include ::httpd
+  httpd::mod { 'rewrite':
+    ensure => present,
+  }
+  httpd::mod { 'proxy':
+    ensure => present,
+  }
+  httpd::mod { 'proxy_http':
+    ensure => present,
+  }
   ::httpd::vhost { $vhost_name:
-    port     => 443,
-    docroot  => $docroot,
-    priority => '50',
-    template => 'etherpad_lite/etherpadlite.vhost.erb',
-    ssl      => true,
-  }
-  httpd_mod { 'rewrite':
-    ensure => present,
-  }
-  httpd_mod { 'proxy':
-    ensure => present,
-  }
-  httpd_mod { 'proxy_http':
-    ensure => present,
+    port       => 443,
+    vhost_name => $vhost_name,
+    docroot    => $docroot,
+    priority   => '50',
+    template   => 'etherpad_lite/etherpadlite.vhost.erb',
+    ssl        => true,
+    require    => [
+      Httpd::Mod['rewrite'],
+      Httpd::Mod['proxy'],
+      Httpd::Mod['proxy_http'],
+    ]
   }
 
   if ($::lsbdistcodename == 'precise') {
@@ -45,11 +51,13 @@ class etherpad_lite::apache (
     }
   } else {
     file { '/etc/apache2/conf-available/connection-tuning.conf':
-      ensure => present,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
-      source => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
+      notify  => Service['httpd'],
+      require => Httpd::Vhost[$vhost_name],
     }
 
     file { '/etc/apache2/conf-enabled/connection-tuning.conf':
@@ -59,7 +67,7 @@ class etherpad_lite::apache (
       require => File['/etc/apache2/conf-available/connection-tuning.conf'],
     }
 
-    httpd_mod { 'proxy_wstunnel':
+    httpd::mod { 'proxy_wstunnel':
       ensure => present,
     }
   }
@@ -89,7 +97,7 @@ class etherpad_lite::apache (
     mode   => '0700',
   }
 
-  if $ssl_cert_file_contents != '' {
+  if $ssl_cert_file_contents != undef {
     file { $ssl_cert_file:
       owner   => 'root',
       group   => 'root',
@@ -99,7 +107,7 @@ class etherpad_lite::apache (
     }
   }
 
-  if $ssl_key_file_contents != '' {
+  if $ssl_key_file_contents != undef {
     file { $ssl_key_file:
       owner   => 'root',
       group   => 'ssl-cert',
@@ -110,7 +118,7 @@ class etherpad_lite::apache (
     }
   }
 
-  if $ssl_chain_file_contents != '' {
+  if $ssl_chain_file_contents != undef {
     file { $ssl_chain_file:
       owner   => 'root',
       group   => 'root',
