@@ -7,10 +7,11 @@ class etherpad_lite::mysql(
   $database_password,
 ) {
   class { '::mysql::server':
-    config_hash => {
-      'root_password'  => $mysql_root_password,
-      'default_engine' => 'InnoDB',
-      'bind_address'   => '127.0.0.1',
+    root_password    => $mysql_root_password,
+    override_options => {
+      'mysqld' => {
+        'default-storage-engine' => 'InnoDB',
+      }
     }
   }
 
