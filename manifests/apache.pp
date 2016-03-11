@@ -24,43 +24,78 @@ class etherpad_lite::apache (
     template => 'etherpad_lite/etherpadlite.vhost.erb',
     ssl      => true,
   }
-  httpd_mod { 'rewrite':
-    ensure => present,
+
+  if !defined(Mod['rewrite']) {
+    httpd::mod { 'rewrite':
+      ensure => present,
+    }
   }
-  httpd_mod { 'proxy':
-    ensure => present,
+  if !defined(Mod['proxy']) {
+    httpd::mod { 'proxy':
+      ensure => present,
+    }
   }
-  httpd_mod { 'proxy_http':
-    ensure => present,
+  if !defined(Mod['proxy_http']) {
+    httpd::mod { 'proxy_http':
+      ensure => present,
+    }
   }
 
+  file { '/etc/apache2':
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
   if ($::lsbdistcodename == 'precise') {
+    file { '/etc/apache2/conf.d':
+      ensure  => directory,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      require => File['/etc/apache2'],
+    }
     file { '/etc/apache2/conf.d/connection-tuning':
-      ensure => present,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
-      source => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
-      notify => Service['httpd'],
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
+      notify  => Service['httpd'],
+      require => File['/etc/apache2/conf.d'],
     }
   } else {
-    file { '/etc/apache2/conf-available/connection-tuning.conf':
-      ensure => present,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
-      source => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
+    file { '/etc/apache2/conf-available':
+      ensure  => directory,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      require => File['/etc/apache2'],
+    }
+    file { '/etc/apache2/conf-available/connection-tuning':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => 'puppet:///modules/etherpad_lite/apache-connection-tuning',
+      require => File['/etc/apache2/conf-available'],
     }
 
-    file { '/etc/apache2/conf-enabled/connection-tuning.conf':
+    file { '/etc/apache2/conf-enabled':
+      ensure  => directory,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      require => File['/etc/apache2'],
+    }
+    file { '/etc/apache2/conf-enabled/connection-tuning':
       ensure  => link,
       target  => '/etc/apache2/conf-available/connection-tuning.conf',
       notify  => Service['httpd'],
-      require => File['/etc/apache2/conf-available/connection-tuning.conf'],
-    }
-
-    httpd_mod { 'proxy_wstunnel':
-      ensure => present,
+      require => [
+        File['/etc/apache2/conf-enabled'],
+        File['/etc/apache2/conf-available/connection-tuning'],
+      ],
     }
   }
 
