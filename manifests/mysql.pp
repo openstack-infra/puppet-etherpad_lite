@@ -1,10 +1,10 @@
 # == Class: puppet-etherpad_lite::mysql
 #
 class etherpad_lite::mysql(
+  $database_password,
   $mysql_root_password,
   $database_name = 'etherpad-lite',
   $database_user = 'eplite',
-  $database_password,
 ) {
   class { '::mysql::server':
     root_password    => $mysql_root_password,

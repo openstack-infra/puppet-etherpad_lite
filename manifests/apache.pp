@@ -1,15 +1,15 @@
 # == Class: etherpad_lite::apache
 #
 class etherpad_lite::apache (
-  $vhost_name = $::fqdn,
-  $docroot = '/srv/etherpad-lite',
-  $serveradmin = "webmaster@${::fqdn}",
-  $ssl_cert_file = '',
-  $ssl_key_file = '',
-  $ssl_chain_file = '',
-  $ssl_cert_file_contents = '', # If left empty puppet will not create file.
-  $ssl_key_file_contents = '', # If left empty puppet will not create file.
-  $ssl_chain_file_contents = '' # If left empty puppet will not create file.
+  $docroot                 = '/srv/etherpad-lite',
+  $serveradmin             = "webmaster@${::fqdn}",
+  $ssl_cert_file           = '',
+  $ssl_cert_file_contents  = '', # If left empty puppet will not create file.
+  $ssl_chain_file          = '',
+  $ssl_chain_file_contents = '', # If left empty puppet will not create file.
+  $ssl_key_file            = '',
+  $ssl_key_file_contents   = '', # If left empty puppet will not create file.
+  $vhost_name              = $::fqdn,
 ) {
 
   package { 'ssl-cert':

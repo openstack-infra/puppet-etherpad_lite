@@ -3,11 +3,11 @@
 class etherpad_lite::site (
   $database_password,
   $etherpad_title,
-  $session_key   = '',
-  $db_type       = 'mysql',
-  $database_user = 'eplite',
+  $database_host = 'localhost',
   $database_name = 'etherpad-lite',
-  $database_host = 'localhost'
+  $database_user = 'eplite',
+  $db_type       = 'mysql',
+  $session_key   = '',
 ) {
 
   include ::etherpad_lite
