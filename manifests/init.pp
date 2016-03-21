@@ -12,13 +12,13 @@
 #
 #
 class etherpad_lite (
-  $ep_user          = 'eplite',
-  $base_log_dir     = '/var/log',
   $base_install_dir = '/opt/etherpad-lite',
+  $base_log_dir     = '/var/log',
+  $ep_ensure        = 'present',
+  $ep_user          = 'eplite',
+  $eplite_version   = 'develop',
   # If set to system will install system package.
   $nodejs_version   = 'v0.10.21',
-  $eplite_version   = 'develop',
-  $ep_ensure        = 'present',
 ) {
 
   # where the modules are, needed to easily install modules later

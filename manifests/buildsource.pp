@@ -3,10 +3,10 @@
 # define to build from source using ./configure && make && make install.
 #
 define etherpad_lite::buildsource(
-  $dir     = $title,
-  $user    = 'root',
-  $timeout = 300,
   $creates = '/nonexistant/file'
+  $dir     = $title,
+  $timeout = 300,
+  $user    = 'root',
 ) {
 
   exec { "./configure in ${dir}":
