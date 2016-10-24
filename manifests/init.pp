@@ -61,16 +61,16 @@ class etherpad_lite (
       ],
     }
 
-    package { [
+    $packages = [
         'gzip',
         'curl',
         'python',
         'libssl-dev',
         'pkg-config',
         'build-essential',
-      ]:
-      ensure => present,
-    }
+      ]
+
+    ensure_resource('package', $packages, {'ensure' => 'present'})
 
     package { ['nodejs', 'npm']:
       ensure => purged,
