@@ -45,6 +45,12 @@ class etherpad_lite (
     mode   => '0664',
   }
 
+  file { "${base_install_dir}/var" :
+    ensure  => directory,
+    owner   => $ep_user,
+    recurse => true,
+  }
+
   package { 'abiword':
     ensure => present,
   }
@@ -145,8 +151,9 @@ class etherpad_lite (
   }
 
   file { "${base_log_dir}/${ep_user}":
-    ensure => directory,
-    owner  => $ep_user,
+    ensure  => directory,
+    owner   => $ep_user,
+    recurse => true,
   }
   # end package management ugliness
 }
