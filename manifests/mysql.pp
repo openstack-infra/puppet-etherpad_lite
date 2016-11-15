@@ -23,6 +23,7 @@ class etherpad_lite::mysql(
     host     => 'localhost',
     grant    => ['all'],
     charset  => 'utf8mb4',
+    collate  => 'utf8mb4_unicode_ci',
     require  => [
       Class['mysql::server'],
       Class['mysql::server::account_security'],
