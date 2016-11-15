@@ -23,7 +23,7 @@ class etherpad_lite (
 
   # where the modules are, needed to easily install modules later
   $modules_dir = "${base_install_dir}/etherpad-lite/node_modules"
-  $path = "/usr/bin:/bin:/usr/local/bin:${base_install_dir}/etherpad-lite"
+  $path = "/usr/local/bin:/usr/bin:/bin:${base_install_dir}/etherpad-lite"
 
   user { $ep_user:
     shell   => '/usr/sbin/nologin',
