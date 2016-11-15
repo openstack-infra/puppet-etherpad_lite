@@ -18,7 +18,7 @@ class etherpad_lite (
   $ep_user          = 'eplite',
   $eplite_version   = 'develop',
   # If set to system will install system package.
-  $nodejs_version   = 'v0.10.21',
+  $nodejs_version   = '0.10',
 ) {
 
   # where the modules are, needed to easily install modules later
@@ -54,57 +54,21 @@ class etherpad_lite (
   }
 
   if ($nodejs_version != 'system') {
-    vcsrepo { "${base_install_dir}/nodejs":
-      ensure   => present,
-      provider => git,
-      source   => 'https://github.com/joyent/node.git',
-      revision => $nodejs_version,
-      require  => [
-          Package['git'],
-          File[$base_install_dir],
-      ],
-    }
-
-    package { [
-        'gzip',
-        'python',
-        'libssl-dev',
-        'pkg-config',
-        'build-essential',
-      ]:
-      ensure => present,
-    }
-
-    package { ['nodejs', 'npm']:
-      ensure => purged,
-    }
-
-    buildsource { "${base_install_dir}/nodejs":
-      timeout => 900, # 15 minutes
-      creates => '/usr/local/bin/node',
-      require => [
-        Package['gzip'],
-        Package['curl'],
-        Package['python'],
-        Package['libssl-dev'],
-        Package['pkg-config'],
-        Package['build-essential'],
-        Vcsrepo["${base_install_dir}/nodejs"],
-      ],
-      before  => Anchor['nodejs-anchor'],
+    class { '::nodejs':
+      repo_url_suffix = $nodejs_version,
     }
   } else {
     package { ['nodejs', 'npm']:
       ensure => present,
       before => Anchor['nodejs-anchor'],
     }
+  }
 
-    file { '/usr/local/bin/node':
-      ensure  => link,
-      target  => '/usr/bin/nodejs',
-      before  => Anchor['nodejs-anchor'],
-      require => Package['nodejs'],
-    }
+  file { '/usr/local/bin/node':
+    ensure  => link,
+    target  => '/usr/bin/nodejs',
+    before  => Anchor['nodejs-anchor'],
+    require => Package['nodejs'],
   }
 
   anchor { 'nodejs-anchor': }
