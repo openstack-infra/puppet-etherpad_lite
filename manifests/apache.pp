@@ -10,6 +10,21 @@ class etherpad_lite::apache (
   $ssl_key_file            = '',
   $ssl_key_file_contents   = '', # If left empty puppet will not create file.
   $vhost_name              = $::fqdn,
+  # Table containing openid auth details. If undef not enabled
+  # Example dict:
+  # {
+  #   banner         => "Welcome",
+  #   singleIdp      => "https://openstackid.org",
+  #   trusted        => '^https://openstackid.org/.*$',
+  #   any_valid_user => false,
+  #   users          => ['https://openstackid.org/foo',
+  #                      'https://openstackid.org/bar'],
+  # }
+  # Note that if you care which users get access set any_valid_user to false
+  # and then provide an explicit list of openids in the users list. Otherwise
+  # set any_valid_user to true and any successfully authenticated user will
+  # get access.
+  $auth_openid             = undef,
 ) {
 
   package { 'ssl-cert':
@@ -38,6 +53,19 @@ class etherpad_lite::apache (
   if !defined(Mod['proxy_http']) {
     httpd::mod { 'proxy_http':
       ensure => present,
+    }
+  }
+  if ($auth_openid != undef) {
+    if !defined(Package['libapache2-mod-auth-openid']) {
+      package { 'libapache2-mod-auth-openid':
+        ensure => present,
+      }
+    }
+    if !defined(Mod['auth_openid']) {
+      httpd::mod { 'auth_openid':
+        ensure  => present,
+        require => Package['libapache2-mod-auth-openid'],
+      }
     }
   }
 
