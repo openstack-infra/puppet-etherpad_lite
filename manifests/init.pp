@@ -49,6 +49,10 @@ class etherpad_lite (
     ensure => present,
   }
 
+  package { 'curl':
+    ensure => present,
+  }
+
   if ($nodejs_version != 'system') {
     vcsrepo { "${base_install_dir}/nodejs":
       ensure   => present,
@@ -63,7 +67,6 @@ class etherpad_lite (
 
     package { [
         'gzip',
-        'curl',
         'python',
         'libssl-dev',
         'pkg-config',
@@ -125,6 +128,7 @@ class etherpad_lite (
     cwd         => "${base_install_dir}/etherpad-lite",
     environment => "HOME=${base_log_dir}/${ep_user}",
     require     => [
+      Package['curl'],
       Vcsrepo["${base_install_dir}/etherpad-lite"],
       Anchor['nodejs-anchor'],
     ],
