@@ -125,6 +125,7 @@ class etherpad_lite (
     cwd         => "${base_install_dir}/etherpad-lite",
     environment => "HOME=${base_log_dir}/${ep_user}",
     require     => [
+      Package['curl'],
       Vcsrepo["${base_install_dir}/etherpad-lite"],
       Anchor['nodejs-anchor'],
     ],
