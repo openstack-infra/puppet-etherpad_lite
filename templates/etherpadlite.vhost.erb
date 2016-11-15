@@ -38,6 +38,26 @@
   # MSIE 7 and newer should be able to use keepalive
   BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
 
+  <% if @auth_openid != nil %>
+  <Location /p/>
+      AuthType OpenID
+      AuthName "<%= @auth_openid['banner'] %>"
+      AuthOpenIDSecureCookie On
+      AuthOpenIDCookieLifespan 3600
+      AuthOpenIDTrustRoot <%= @vhost_name %>
+      AuthOpenIDServerName <%= @vhost_name %>
+      AuthOpenIDSingleIdP <%= @auth_openid['singleIdp'] %>
+      AuthOpenIDTrusted <%= @auth_openid['trusted'] %>
+      <% if @auth_openid['any_valid_user'] %>
+      Require valid-user
+      <% elsif !@auth_openid['users'].empty? %>
+      <% @auth_openid['users'].each do |user| -%>
+      Require user <%= user %>
+      <% end -%>
+      <% end %>
+  </Location>
+  <% end %>
+
   <IfModule mod_proxy.c>
       # The following redirects "nice" urls such as https://etherpad.example.org/padname
       # to https://etherpad.example.org/p/padname. It was problematic directly
