@@ -44,8 +44,8 @@
       AuthName "<%= @auth_openid['banner'] %>"
       AuthOpenIDSecureCookie On
       AuthOpenIDCookieLifespan 3600
-      AuthOpenIDTrustRoot <%= @vhost_name %>
-      AuthOpenIDServerName <%= @vhost_name %>
+      AuthOpenIDTrustRoot https://<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>
+      AuthOpenIDServerName https://<%= scope.lookupvar("etherpad_lite::apache::vhost_name") %>
       AuthOpenIDSingleIdP <%= @auth_openid['singleIdp'] %>
       AuthOpenIDTrusted <%= @auth_openid['trusted'] %>
       <% if @auth_openid['any_valid_user'] %>
