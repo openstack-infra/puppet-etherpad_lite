@@ -49,8 +49,10 @@ class etherpad_lite (
     ensure => present,
   }
 
-  package { 'curl':
-    ensure => present,
+  if !defined(Package['curl']) {
+    package { 'curl':
+      ensure => present,
+    }
   }
 
   anchor { 'nodejs-package-install': }
