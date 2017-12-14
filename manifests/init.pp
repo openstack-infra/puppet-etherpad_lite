@@ -78,6 +78,12 @@ class etherpad_lite (
 
   anchor { 'nodejs-anchor': }
 
+  if !defined(Package['git']) {
+    package { 'git':
+      ensure => present
+    }
+  }
+
   vcsrepo { "${base_install_dir}/etherpad-lite":
     ensure   => $ep_ensure,
     provider => git,
