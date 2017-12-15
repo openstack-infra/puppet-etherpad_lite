@@ -18,7 +18,7 @@ class etherpad_lite (
   $ep_user          = 'eplite',
   $eplite_version   = 'develop',
   # If set to system will install system package.
-  $nodejs_version   = 'node_0.10',
+  $nodejs_version   = '6.x',
 ) {
 
   # where the modules are, needed to easily install modules later
