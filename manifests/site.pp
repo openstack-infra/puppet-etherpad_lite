@@ -28,6 +28,7 @@ class etherpad_lite::site (
     group   => $etherpad_lite::ep_user,
     mode    => '0600',
     require => Class['etherpad_lite'],
+    before  => Service['etherpad-lite'],
   }
 
   file { "${base}/etherpad-lite/src/static/custom/pad.js":
@@ -37,6 +38,7 @@ class etherpad_lite::site (
     group   => $etherpad_lite::ep_user,
     mode    => '0644',
     require => Class['etherpad_lite'],
+    before  => Service['etherpad-lite'],
   }
 
 }
