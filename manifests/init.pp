@@ -27,7 +27,7 @@ class etherpad_lite (
 
   user { $ep_user:
     shell   => '/usr/sbin/nologin',
-    home    => "${base_log_dir}/${ep_user}",
+    home    => "${base_install_dir}/${ep_user}",
     system  => true,
     gid     => $ep_user,
     require => Group[$ep_user],
@@ -95,7 +95,7 @@ class etherpad_lite (
     path        => $path,
     user        => $ep_user,
     cwd         => "${base_install_dir}/etherpad-lite",
-    environment => "HOME=${base_log_dir}/${ep_user}",
+    environment => "HOME=${base_install_dir}/${ep_user}",
     require     => [
       Package['curl'],
       Vcsrepo["${base_install_dir}/etherpad-lite"],
