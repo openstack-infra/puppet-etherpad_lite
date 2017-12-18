@@ -107,46 +107,77 @@ class etherpad_lite (
     creates     => "${base_install_dir}/etherpad-lite/node_modules",
   }
 
-  file { '/etc/init/etherpad-lite.conf':
-    ensure  => present,
-    content => template('etherpad_lite/upstart.erb'),
-    replace => true,
-    owner   => 'root',
-  }
+  case $::operatingsystem {
+    'Ubuntu': {
+      if $::operatingsystemrelease <= '14.04' {
 
-  file { '/etc/init.d/etherpad-lite':
-    ensure => link,
-    target => '/lib/init/upstart-job',
-  }
+        file { '/etc/init/etherpad-lite.conf':
+          ensure  => present,
+          content => template('etherpad_lite/upstart.erb'),
+          replace => true,
+          owner   => 'root',
+        }
 
-  file { "${base_log_dir}/${ep_user}":
-    ensure => directory,
-    owner  => $ep_user,
-  }
+        file { '/etc/init.d/etherpad-lite':
+          ensure => link,
+          target => '/lib/init/upstart-job',
+        }
 
-  include ::logrotate
-  logrotate::file { 'epliteerror':
-    log     => "${base_log_dir}/${ep_user}/error.log",
-    options => [
-      'compress',
-      'copytruncate',
-      'missingok',
-      'rotate 7',
-      'daily',
-      'notifempty',
-    ],
-  }
+        file { "${base_log_dir}/${ep_user}":
+          ensure => directory,
+          owner  => $ep_user,
+        }
 
-  logrotate::file { 'epliteaccess':
-    log     => "${base_log_dir}/${ep_user}/access.log",
-    options => [
-      'compress',
-      'copytruncate',
-      'missingok',
-      'rotate 7',
-      'daily',
-      'notifempty',
-    ],
+        include ::logrotate
+        logrotate::file { 'epliteerror':
+          log     => "${base_log_dir}/${ep_user}/error.log",
+          options => [
+                      'compress',
+                      'copytruncate',
+                      'missingok',
+                      'rotate 7',
+                      'daily',
+                      'notifempty',
+                      ],
+        }
+
+        logrotate::file { 'epliteaccess':
+          log     => "${base_log_dir}/${ep_user}/access.log",
+          options => [
+                      'compress',
+                      'copytruncate',
+                      'missingok',
+                      'rotate 7',
+                      'daily',
+                      'notifempty',
+                      ],
+        }
+
+      } else {
+
+        # Note logs go to syslog, can maybe change when
+        # https://github.com/systemd/systemd/pull/7198 is available
+        file { '/etc/systemd/system/etherpad-lite.service':
+          ensure  => present,
+          content => template('etherpad_lite/etherpad-lite.service.erb'),
+          replace => true,
+          owner   => 'root',
+          require => Exec['install_etherpad_dependencies'],
+        }
+
+        # This is a hack to make sure that systemd is aware of the new service
+        # before we attempt to start it.
+        exec { 'etherpad-lite-systemd-daemon-reload':
+          command     => '/bin/systemctl daemon-reload',
+          refreshonly => true,
+          require     => File['/etc/systemd/system/etherpad-lite.service'],
+        }
+
+      }
+    }
+    default: {
+      fail('This operating system not supported')
+    }
   }
 
   # end package management ugliness
