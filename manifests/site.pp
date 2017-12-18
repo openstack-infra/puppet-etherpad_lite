@@ -14,12 +14,6 @@ class etherpad_lite::site (
 
   $base = $etherpad_lite::base_install_dir
 
-  service { 'etherpad-lite':
-    ensure    => running,
-    enable    => true,
-    subscribe => File["${base}/etherpad-lite/settings.json"],
-  }
-
   file { "${base}/etherpad-lite/settings.json":
     ensure  => present,
     content => template('etherpad_lite/etherpad-lite_settings.json.erb'),
@@ -28,6 +22,7 @@ class etherpad_lite::site (
     group   => $etherpad_lite::ep_user,
     mode    => '0600',
     require => Class['etherpad_lite'],
+    notify  => Service['etherpad-lite'],
   }
 
   file { "${base}/etherpad-lite/src/static/custom/pad.js":
