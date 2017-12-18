@@ -39,30 +39,4 @@ class etherpad_lite::site (
     require => Class['etherpad_lite'],
   }
 
-  include ::logrotate
-  logrotate::file { 'epliteerror':
-    log     => "${base}/${etherpad_lite::ep_user}/error.log",
-    options => [
-      'compress',
-      'copytruncate',
-      'missingok',
-      'rotate 7',
-      'daily',
-      'notifempty',
-    ],
-    require => Service['etherpad-lite'],
-  }
-
-  logrotate::file { 'epliteaccess':
-    log     => "${base}/${etherpad_lite::ep_user}/access.log",
-    options => [
-      'compress',
-      'copytruncate',
-      'missingok',
-      'rotate 7',
-      'daily',
-      'notifempty',
-    ],
-    require => Service['etherpad-lite'],
-  }
 }

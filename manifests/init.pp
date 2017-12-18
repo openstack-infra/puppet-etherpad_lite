@@ -121,5 +121,31 @@ class etherpad_lite (
     ensure => directory,
     owner  => $ep_user,
   }
+
+  include ::logrotate
+  logrotate::file { 'epliteerror':
+    log     => "${base_log_dir}/${ep_user}/error.log",
+    options => [
+      'compress',
+      'copytruncate',
+      'missingok',
+      'rotate 7',
+      'daily',
+      'notifempty',
+    ],
+  }
+
+  logrotate::file { 'epliteaccess':
+    log     => "${base_log_dir}/${ep_user}/access.log",
+    options => [
+      'compress',
+      'copytruncate',
+      'missingok',
+      'rotate 7',
+      'daily',
+      'notifempty',
+    ],
+  }
+
   # end package management ugliness
 }
