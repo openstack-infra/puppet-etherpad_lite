@@ -1,0 +1,10 @@
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Code-Review+1: yanpeifei <yanpeifei@gohighsec.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 09 Apr 2018 17:59:54 +0000
+Reviewed-on: https://review.openstack.org/528626
+Project: openstack-infra/puppet-etherpad_lite
+Branch: refs/heads/master
