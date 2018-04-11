@@ -78,6 +78,9 @@
       # etherpad-lite installation.
       RewriteRule ^/robots.txt$ <%= scope.lookupvar("etherpad_lite::apache::docroot") %>/robots.txt [L]
 
+      # Refuse external connections to the API through the proxy
+      RewriteRule ^/api/ - [F,L]
+
       RewriteCond %{REQUEST_URI} !^/p/
       RewriteCond %{REQUEST_URI} !^/locales/
       RewriteCond %{REQUEST_URI} !^/locales.json
