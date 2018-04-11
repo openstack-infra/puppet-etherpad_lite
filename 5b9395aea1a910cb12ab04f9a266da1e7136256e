@@ -1,0 +1,9 @@
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: David Moreau Simard <dmsimard@redhat.com>
+Workflow+1: David Moreau Simard <dmsimard@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 11 Apr 2018 19:04:32 +0000
+Reviewed-on: https://review.openstack.org/560570
+Project: openstack-infra/puppet-etherpad_lite
+Branch: refs/heads/master
