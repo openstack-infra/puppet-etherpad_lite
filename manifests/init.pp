@@ -59,8 +59,9 @@ class etherpad_lite (
 
   if ($nodejs_version != 'system') {
     class { '::nodejs':
-      repo_url_suffix => $nodejs_version,
-      before          => Anchor['nodejs-package-install'],
+      repo_url_suffix        => $nodejs_version,
+      legacy_debian_symlinks => false,
+      before                 => Anchor['nodejs-package-install'],
     }
   } else {
     package { ['nodejs', 'npm']:
