@@ -40,17 +40,17 @@ class etherpad_lite::apache (
     ssl      => true,
   }
 
-  if !defined(Mod['rewrite']) {
+  if !defined(Httpd::Mod['rewrite']) {
     httpd::mod { 'rewrite':
       ensure => present,
     }
   }
-  if !defined(Mod['proxy']) {
+  if !defined(Httpd::Mod['proxy']) {
     httpd::mod { 'proxy':
       ensure => present,
     }
   }
-  if !defined(Mod['proxy_http']) {
+  if !defined(Httpd::Mod['proxy_http']) {
     httpd::mod { 'proxy_http':
       ensure => present,
     }
@@ -61,7 +61,7 @@ class etherpad_lite::apache (
         ensure => present,
       }
     }
-    if !defined(Mod['auth_openid']) {
+    if !defined(Httpd::Mod['auth_openid']) {
       httpd::mod { 'auth_openid':
         ensure  => present,
         require => Package['libapache2-mod-auth-openid'],
