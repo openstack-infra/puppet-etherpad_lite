@@ -1,0 +1,9 @@
+Code-Review+2: Joshua Hesketh <josh@nitrotech.org>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Workflow+1: Clark Boylan <cboylan@sapwetik.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 10 May 2018 16:55:48 +0000
+Reviewed-on: https://review.openstack.org/561398
+Project: openstack-infra/puppet-etherpad_lite
+Branch: refs/heads/master
