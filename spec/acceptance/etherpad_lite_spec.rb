@@ -24,6 +24,10 @@ describe 'puppet-etherpad_lite:: manifest', :if => ['debian', 'ubuntu'].include?
     apply_manifest(init_puppet_module, catch_failures: true)
   end
 
+  it 'should be idempotent' do
+    apply_manifest(init_puppet_module, catch_changes: true)
+  end
+
   describe 'required files' do
     describe file('/opt/etherpad-lite/') do
       it { should be_directory }
@@ -46,18 +50,16 @@ describe 'puppet-etherpad_lite:: manifest', :if => ['debian', 'ubuntu'].include?
     end
   end
 
-  # This needs more work before it's up in the test env ...
-  #
-  # describe 'required services' do
-  #   describe 'ports are open and services are reachable' do
-  #     describe port(80) do
-  #       it { should be_listening }
-  #     end
+  describe 'required services' do
+    describe 'ports are open and services are reachable' do
+      describe port(80) do
+        it { should be_listening }
+      end
 
-  #     describe command('curl -L -k http://localhost --verbose') do
-  #       its(:stdout) { should contain('randomPadName()') }
-  #     end
-  #   end
-  # end
+      describe command('curl -L -k http://localhost --verbose') do
+        its(:stdout) { should contain('randomPadName()') }
+      end
+    end
+  end
 
 end
