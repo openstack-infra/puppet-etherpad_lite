@@ -1,0 +1,9 @@
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Code-Review+2: Paul Belanger <pabelanger@redhat.com>
+Workflow+1: Paul Belanger <pabelanger@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 15 Oct 2018 23:00:43 +0000
+Reviewed-on: https://review.openstack.org/610717
+Project: openstack-infra/puppet-etherpad_lite
+Branch: refs/heads/master
