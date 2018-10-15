@@ -19,3 +19,7 @@ class { '::etherpad_lite::site':
   database_password => 'password',
   etherpad_title    => 'A fake title',
 }
+
+etherpad_lite::plugin { 'ep_headings':
+  require => Class['etherpad_lite'],
+}
