@@ -31,13 +31,21 @@ class etherpad_lite::site (
     before  => Service['etherpad-lite'],
   }
 
+  file { "${base}/etherpad-lite/src/static/custom":
+    ensure  => directory,
+    owner   => $etherpad_lite::ep_user,
+    group   => $etherpad_lite::ep_user,
+    mode    => '0755',
+    require => Class['etherpad_lite'],
+  }
+
   file { "${base}/etherpad-lite/src/static/custom/pad.js":
     ensure  => present,
     source  => 'puppet:///modules/etherpad_lite/pad.js',
     owner   => $etherpad_lite::ep_user,
     group   => $etherpad_lite::ep_user,
     mode    => '0644',
-    require => Class['etherpad_lite'],
+    require => File["${base}/etherpad-lite/src/static/custom"],
     before  => Service['etherpad-lite'],
   }
 
