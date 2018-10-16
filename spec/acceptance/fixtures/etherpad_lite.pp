@@ -5,7 +5,7 @@ class { '::etherpad_lite::mysql':
 
 class { '::etherpad_lite':
   ep_ensure      => 'latest',
-  eplite_version => '1.6.2',
+  eplite_version => '1.7.0',
   nodejs_version => '6.x',
 }
 
