@@ -1,0 +1,8 @@
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Workflow+1: Jeremy Stanley <fungi@yuggoth.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 31 Oct 2018 20:55:20 +0000
+Reviewed-on: https://review.openstack.org/614595
+Project: openstack-infra/puppet-etherpad_lite
+Branch: refs/heads/master
