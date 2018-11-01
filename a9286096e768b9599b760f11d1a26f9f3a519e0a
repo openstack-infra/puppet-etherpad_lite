@@ -1,0 +1,9 @@
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 01 Nov 2018 23:08:39 +0000
+Reviewed-on: https://review.openstack.org/614883
+Project: openstack-infra/puppet-etherpad_lite
+Branch: refs/heads/master
