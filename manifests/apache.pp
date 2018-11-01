@@ -55,6 +55,11 @@ class etherpad_lite::apache (
       ensure => present,
     }
   }
+  if !defined(Httpd::Mod['proxy_wstunnel']) {
+    httpd::mod { 'proxy_wstunnel':
+      ensure => present,
+    }
+  }
   if ($auth_openid != undef) {
     if !defined(Package['libapache2-mod-auth-openid']) {
       package { 'libapache2-mod-auth-openid':
